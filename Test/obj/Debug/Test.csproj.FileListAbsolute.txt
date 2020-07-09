@@ -1,0 +1,6 @@
+F:\C#\Internship Project\AIGame\Test\bin\Debug\Test.exe
+F:\C#\Internship Project\AIGame\Test\bin\Debug\Test.pdb
+F:\C#\Internship Project\AIGame\Test\obj\Debug\Test.csprojAssemblyReference.cache
+F:\C#\Internship Project\AIGame\Test\obj\Debug\Test.csproj.CoreCompileInputs.cache
+F:\C#\Internship Project\AIGame\Test\obj\Debug\Test.exe
+F:\C#\Internship Project\AIGame\Test\obj\Debug\Test.pdb

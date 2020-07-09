@@ -1,0 +1,6 @@
+F:\C#\Internship Project\AIGame\AIGame\bin\Release\AIGame.exe
+F:\C#\Internship Project\AIGame\AIGame\bin\Release\AIGame.pdb
+F:\C#\Internship Project\AIGame\AIGame\obj\Release\AIGame.csprojAssemblyReference.cache
+F:\C#\Internship Project\AIGame\AIGame\obj\Release\AIGame.csproj.CoreCompileInputs.cache
+F:\C#\Internship Project\AIGame\AIGame\obj\Release\AIGame.exe
+F:\C#\Internship Project\AIGame\AIGame\obj\Release\AIGame.pdb
