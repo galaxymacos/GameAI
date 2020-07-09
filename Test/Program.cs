@@ -8,6 +8,12 @@ class GFG
     class Move
     {
         public int row, col;
+
+        public Move(int row, int col)
+        {
+            this.row = row;
+            this.col = col;
+        }
     };
 
     static char player = 'x', opponent = 'o';
@@ -183,6 +189,7 @@ class GFG
 
     private static int MAX = 1000;
     private static int MIN = -1000;
+
     static int minimax(char[,] board,
         int depth, Boolean isMax, int maxDepth, int alpha, int beta)
     {
@@ -191,22 +198,24 @@ class GFG
         switch (gameState)
         {
             case GameState.PlayerWin:
-                score = 10;
+                score = 1000;
                 break;
             case GameState.AIWin:
-                score = -10;
+                score = -1000;
                 break;
         }
 
+
         // If Maximizer has won the game  
         // return his/her evaluated score 
-        if (score == 10)
+        if (score == 1000)
             return score;
 
         // If Minimizer has won the game  
         // return his/her evaluated score 
-        if (score == -10)
+        if (score == -1000)
             return score;
+
 
         // If there are no more moves and  
         // no winner then it is a tie 
@@ -217,7 +226,7 @@ class GFG
         // Limit the searching to increase performance (can delete later)
         if (depth > maxDepth)
             return 0;
-        
+
         // If this maximizer's move 
         if (isMax)
         {
@@ -228,8 +237,10 @@ class GFG
             {
                 if (alpha >= beta)
                 {
+
                     break;
                 }
+
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
                     // Check if cell is empty 
@@ -240,14 +251,16 @@ class GFG
 
                         // Call minimax recursively and choose 
                         // the maximum value 
-                        best = Math.Max(best, minimax(board,
-                            depth + 1, !isMax,maxDepth, alpha, beta));
+                        best = Math.Max(best+CalculateSurroundingUnit(board,i,j)*5, minimax(board,
+                            depth + 1, !isMax, maxDepth, alpha, beta));
                         alpha = Math.Max(alpha, best);
                         // Undo the move 
                         board[i, j] = '_';
 
                         if (alpha >= beta)
+                        {
                             break;
+                        }
                     }
                 }
             }
@@ -267,6 +280,8 @@ class GFG
                     break;
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
+                    if (!HasSurroundingCell(board, i, j))
+                        continue;
                     // Check if cell is empty 
                     if (board[i, j] == '_')
                     {
@@ -299,7 +314,7 @@ class GFG
     static Move findBestMove(char[,] board)
     {
         int bestVal = 1000;
-        Move bestMove = new Move();
+        Move bestMove = new Move(0, 0);
         bestMove.row = -1;
         bestMove.col = -1;
 
@@ -310,6 +325,11 @@ class GFG
         {
             for (int j = 0; j < board.GetLength(1); j++)
             {
+                if (!HasSurroundingCell(board, i, j))
+                {
+                    continue;
+                }
+
                 // Check if cell is empty 
                 if (board[i, j] == '_')
                 {
@@ -318,8 +338,7 @@ class GFG
 
                     // compute evaluation function for this 
                     // move. 
-                    int moveVal = minimax(board, 0, true,3, -1000, 1000);
-
+                    int moveVal = minimax(board, 0, true, 7, -1000, 1000);
                     // Undo the move 
                     board[i, j] = '_';
 
@@ -361,6 +380,137 @@ class GFG
         if (row >= board.GetLength(0) || col >= board.GetLength(1))
             return false;
         return board[row, col] == '_';
+    }
+
+    /// <summary>
+    /// How much score should a node gain because it is close to the other nodes
+    /// </summary>
+    /// <param name="board"></param>
+    /// <param name="c"></param>
+    /// <returns></returns>
+    // public static int DistanceToScore(char[,] board,int row, int col)
+    // {
+    //     int scoreGain = 0;
+    //     for (int i = 0; i < board.GetLength(0); i++)
+    //     {
+    //         for (int j = 0; j < board.GetLength(1); j++)
+    //         {
+    //             if (i != row && j != col && board[i,j] != '_')
+    //             {
+    //                 // Calculate distance
+    //                 if (i < row && j < col)
+    //                 {
+    //                     int diagonalMovePoint = Math.Min(row - i, col - j);
+    //                     int alongMovePoint = Math.Abs((row - i)-(col - j));
+    //                     scoreGain += diagonalMovePoint;
+    //                     scoreGain += alongMovePoint;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //
+    //     return scoreGain;
+    // }
+    public static bool HasSurroundingCell(char[,] board, int row, int col)
+    {
+        if (!outOfBounds(board, row - 1, col - 1) && board[row - 1, col - 1] != '_')
+        {
+            return true;
+        }
+
+        if (!outOfBounds(board, row - 1, col + 1) && board[row - 1, col + 1] != '_')
+        {
+            return true;
+        }
+
+        if (!outOfBounds(board, row, col - 1) && board[row, col - 1] != '_')
+        {
+            return true;
+        }
+
+        if (!outOfBounds(board, row, col + 1) && board[row, col + 1] != '_')
+        {
+            return true;
+        }
+
+        if (!outOfBounds(board, row + 1, col - 1) && board[row + 1, col - 1] != '_')
+        {
+            return true;
+        }
+
+        if (!outOfBounds(board, row + 1, col + 1) && board[row + 1, col + 1] != '_')
+        {
+            return true;
+        }
+
+        if (!outOfBounds(board, row + 1, col) && board[row + 1, col] != '_')
+        {
+            return true;
+        }
+
+        if (!outOfBounds(board, row - 1, col) && board[row - 1, col] != '_')
+        {
+            return true;
+        }
+
+
+        return false;
+    }
+    
+    public static int CalculateSurroundingUnit(char[,] board, int row, int col)
+    {
+        int unit = 0;
+        if (!outOfBounds(board, row - 1, col - 1) && board[row - 1, col - 1] != '_')
+        {
+            unit++;
+        }
+
+        if (!outOfBounds(board, row - 1, col + 1) && board[row - 1, col + 1] != '_')
+        {
+            unit++;
+        }
+
+        if (!outOfBounds(board, row, col - 1) && board[row, col - 1] != '_')
+        {
+            unit++;
+            
+        }
+
+        if (!outOfBounds(board, row, col + 1) && board[row, col + 1] != '_')
+        {
+            unit++;
+        }
+
+        if (!outOfBounds(board, row + 1, col - 1) && board[row + 1, col - 1] != '_')
+        {
+            unit++;
+        }
+
+        if (!outOfBounds(board, row + 1, col + 1) && board[row + 1, col + 1] != '_')
+        {
+            unit++;
+        }
+
+        if (!outOfBounds(board, row + 1, col) && board[row + 1, col] != '_')
+        {
+            unit++;
+        }
+
+        if (!outOfBounds(board, row - 1, col) && board[row - 1, col] != '_')
+        {
+            unit++;
+        }
+
+
+        return unit;
+    }
+
+
+    private static bool outOfBounds(char[,] board, int row, int col)
+    {
+        if (row < 0 || row >= board.GetLength(0) || col < 0 || col >= board.GetLength(1))
+            return true;
+        return false;
     }
 
 // Driver code 
@@ -420,6 +570,7 @@ class GFG
 
             // AI move
             Move bestMove = findBestMove(board);
+            Console.WriteLine($"Best Move: {bestMove.row}, {bestMove.col}");
             board[bestMove.row, bestMove.col] = 'o';
             PrintBoard(board);
         }
