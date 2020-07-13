@@ -237,7 +237,6 @@ class GFG
             {
                 if (alpha >= beta)
                 {
-
                     break;
                 }
 
@@ -251,7 +250,7 @@ class GFG
 
                         // Call minimax recursively and choose 
                         // the maximum value 
-                        best = Math.Max(best+CalculateSurroundingUnit(board,i,j)*5, minimax(board,
+                        best = Math.Max(best + CalculateSurroundingUnit(board, i, j) * 5, minimax(board,
                             depth + 1, !isMax, maxDepth, alpha, beta));
                         alpha = Math.Max(alpha, best);
                         // Undo the move 
@@ -314,9 +313,16 @@ class GFG
     static Move findBestMove(char[,] board)
     {
         int bestVal = 1000;
-        Move bestMove = new Move(0, 0);
-        bestMove.row = -1;
-        bestMove.col = -1;
+        var bestMove = StopOpponentImmediately(board);
+        if (bestMove != null)
+        {
+            return bestMove;
+        }
+
+        Console.WriteLine("hey");
+
+        bestMove = new Move(-1, -1);
+        
 
         // Traverse all cells, evaluate minimax function  
         // for all empty cells. And return the cell  
@@ -456,7 +462,7 @@ class GFG
 
         return false;
     }
-    
+
     public static int CalculateSurroundingUnit(char[,] board, int row, int col)
     {
         int unit = 0;
@@ -473,7 +479,6 @@ class GFG
         if (!outOfBounds(board, row, col - 1) && board[row, col - 1] != '_')
         {
             unit++;
-            
         }
 
         if (!outOfBounds(board, row, col + 1) && board[row, col + 1] != '_')
@@ -505,6 +510,164 @@ class GFG
         return unit;
     }
 
+    private static Move StopOpponentImmediately(char[,] board)
+    {
+        int boardLength = board.GetLength(0);
+        int mostPlayerChessContinuously = 0;
+        Move result = null;
+        
+        // check row
+        for (int i = 0; i < boardLength; i++)
+        {
+            int count = 0;
+            for (int j = 0; j < boardLength; j++)
+            {
+                if (board[i, j] == 'X')
+                {
+                    count++;
+                }
+            }
+
+            if (count == boardLength - 1)
+            {
+                // dangerous
+                for (int c = 0; c < boardLength; c++)
+                {
+                    if (board[i, c] == '_')
+                    {
+                        return new Move(i, c);
+                    }
+                }
+            }
+
+            if (count > mostPlayerChessContinuously)
+            {
+                mostPlayerChessContinuously = count;
+                for (int j = 0; j < boardLength; j++)
+                {
+                    if (board[i, j] == '_')
+                    {
+                        result = new Move(i, j);
+                        break;
+                    }
+                }
+            }
+            
+
+            
+        }
+        
+
+        for (int i = 0; i < boardLength; i++)
+        {
+            int count = 0;
+            for (int j = 0; j < boardLength; j++)
+            {
+                if (board[j, i] == 'X')
+                {
+                    count++;
+                }
+            }
+
+            if (count == boardLength - 1)
+            {
+                // dangerous
+                for (int j = 0; j < boardLength; j++)
+                {
+                    if (board[j, i] == '_')
+                    {
+                        return new Move(j, i);
+                    }
+                }
+            }
+            else if (count > mostPlayerChessContinuously)
+            {
+                mostPlayerChessContinuously = count;
+                for (int j = 0; j < boardLength; j++)
+                {
+                    if (board[j, i] == '_')
+                    {
+                        result = new Move(j, i);
+                        break;
+                    }
+                }
+            }
+        }
+
+        int countDiagonal = 0;
+        for (int i = 0; i < boardLength; i++)
+        {
+            if (board[i, i] == 'X')
+            {
+                countDiagonal++;
+            }
+
+            
+        }
+        if (countDiagonal == boardLength - 1)
+        {
+            // dangerous
+            for (int c = 0; c < boardLength; c++)
+            {
+                if (board[c, c] == '_')
+                {
+                    return new Move(c, c);
+                }
+            }
+        }
+        
+        if (countDiagonal > mostPlayerChessContinuously)
+        {
+            mostPlayerChessContinuously = countDiagonal;
+            for (int i = 0; i < boardLength; i++)
+            {
+                if (board[i, i] == '_')
+                {
+                    result = new Move(i, i);
+                    break;
+                }
+            }
+        }
+
+        countDiagonal = 0;
+        for (int i = 0; i < boardLength; i++)
+        {
+            if (board[i, boardLength-i-1] == 'X')
+            {
+                countDiagonal++;
+            }
+        }
+
+        if (countDiagonal == boardLength - 1)
+        {
+            // dangerous
+            for (int c = 0; c < boardLength; c++)
+            {
+                if (board[c, c] == '_')
+                {
+                    return new Move(c, c);
+                }
+            }
+        }
+        
+        if (countDiagonal > mostPlayerChessContinuously)
+        {
+            mostPlayerChessContinuously = countDiagonal;
+            for (int i = 0; i < boardLength; i++)
+            {
+                if (board[i, boardLength - i - 1] == '_')
+                {
+                    result = new Move(i, boardLength - i - 1);
+                    break;
+                }
+            }
+        }
+        
+        
+
+
+        return result;
+    }
 
     private static bool outOfBounds(char[,] board, int row, int col)
     {
@@ -515,6 +678,25 @@ class GFG
 
 // Driver code 
     public static void Main()
+    {
+        // var testBoard = new char[4, 4]
+        // {
+        //     {'X', '_', '_', '_'},
+        //     {'_', 'X', '_', '_'},
+        //     {'_', '_', 'X', '_'},
+        //     {'_', '_', '_', '_'}
+        // };
+        //
+        // var move = StopOpponentImmediately(testBoard);
+        // if (move != null)
+        // {
+        //     Console.WriteLine($"{move.row}, {move.col}");
+        // }
+
+        RunGame();
+    }
+
+    private static void RunGame()
     {
         Console.WriteLine("Welcome to the game");
         Console.Write("Please enter the size of the board: ");
@@ -528,6 +710,7 @@ class GFG
                 board[i, j] = '_';
             }
         }
+
 
         PrintBoard(board);
         while (isMovesLeft(board) && evaluate(board) == GameState.InProgress)
