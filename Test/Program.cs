@@ -319,7 +319,6 @@ class GFG
             return bestMove;
         }
 
-        Console.WriteLine("hey");
 
         bestMove = new Move(-1, -1);
         
@@ -344,7 +343,7 @@ class GFG
 
                     // compute evaluation function for this 
                     // move. 
-                    int moveVal = minimax(board, 0, true, 7, -1000, 1000);
+                    int moveVal = minimax(board, 0, true, 9, -1000, 1000);
                     // Undo the move 
                     board[i, j] = '_';
 
@@ -522,7 +521,7 @@ class GFG
             int count = 0;
             for (int j = 0; j < boardLength; j++)
             {
-                if (board[i, j] == 'X')
+                if (board[i, j] == 'x')
                 {
                     count++;
                 }
@@ -563,7 +562,7 @@ class GFG
             int count = 0;
             for (int j = 0; j < boardLength; j++)
             {
-                if (board[j, i] == 'X')
+                if (board[j, i] == 'x')
                 {
                     count++;
                 }
@@ -597,7 +596,7 @@ class GFG
         int countDiagonal = 0;
         for (int i = 0; i < boardLength; i++)
         {
-            if (board[i, i] == 'X')
+            if (board[i, i] == 'x')
             {
                 countDiagonal++;
             }
@@ -632,7 +631,7 @@ class GFG
         countDiagonal = 0;
         for (int i = 0; i < boardLength; i++)
         {
-            if (board[i, boardLength-i-1] == 'X')
+            if (board[i, boardLength-i-1] == 'x')
             {
                 countDiagonal++;
             }
